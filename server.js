@@ -1,36 +1,41 @@
 require("dotenv").config();
-console.log(process.env.MONGODB_URI);
 
 const express = require("express");
-const { MongoClient } = require("mongodb");
+const mongoose = require("mongoose");
+const FrangipaniTree = require("./backend/models/FrangipaniTree");
 
 const app = express();
 
-const client = new MongoClient(process.env.MONGODB_URI);
-
-async function connectDB() {
-    if (!client.topology || !client.topology.isConnected()) {
-        await client.connect();
-    }
-}
+mongoose
+  .connect(process.env.MONGODB_URI)
+  .then(() => {
+    console.log("Mongoose connected");
+  })
+  .catch((error) => {
+    console.log(error);
+  });
 
 app.use(express.static("public"));
 
 app.get("/", function (req, res) {
-res.sendFile(__dirname + "/public/index.html");
+  res.sendFile(__dirname + "/public/index.html");
 });
 
-app.get("/api/message", async function (req, res) {
-    await connectDB();
+app.get("/api/trees/:tag", async function (req, res) {
+  const tree = await FrangipaniTree.findOne({
+    tag: req.params.tag,
+  });
 
-    const database = client.db("mini_vercel_db");
-    const collection = database.collection("messages");
+  if (!tree) {
+    return res.status(404).json({
+      message: "Tree not found.",
+    });
+  }
 
-    const message = await collection.findOne();
+  res.json(tree);
 
-    res.json(message);
 });
 
 app.listen(3000, function () {
-    console.log("Server running on http://localhost:3000");
+  console.log("Server running on http://localhost:3000");
 });
