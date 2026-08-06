@@ -12,9 +12,10 @@ mongoose
   .then(() => {
     console.log("Mongoose connected");
   })
-  .catch((error) => {
-    console.log(error);
-  });
+.catch((error) => {
+    console.log("MongoDB connection failed");
+    console.log(error.message);
+});
 
 app.use(express.static("public"));
 
