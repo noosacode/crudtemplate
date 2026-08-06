@@ -37,6 +37,16 @@ app.get("/api/trees/:tag", async function (req, res) {
   res.json(tree);
 });
 
+app.get("/api/test-db", async function (req, res) {
+  const count = await FrangipaniTree.countDocuments();
+
+  res.json({
+    database: mongoose.connection.name,
+    collection: FrangipaniTree.collection.name,
+    count: count,
+  });
+});
+
 // app.listen(3000, function () {
 //  console.log("Server running on http://localhost:3000");
 // });
