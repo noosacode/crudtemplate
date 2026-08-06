@@ -1,6 +1,7 @@
 require("dotenv").config();
 
 const express = require("express");
+console.log(process.env.MONGODB_URI?.substring(0, 30));
 const mongoose = require("mongoose");
 const FrangipaniTree = require("./backend/models/FrangipaniTree");
 
