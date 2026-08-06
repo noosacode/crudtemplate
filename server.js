@@ -12,10 +12,10 @@ mongoose
   .then(() => {
     console.log("Mongoose connected");
   })
-.catch((error) => {
+  .catch((error) => {
     console.log("MongoDB connection failed");
     console.log(error.message);
-});
+  });
 
 app.use(express.static("public"));
 
@@ -40,4 +40,5 @@ app.get("/api/trees/:tag", async function (req, res) {
 
 app.listen(3000, function () {
   console.log("Server running on http://localhost:3000");
+  
 });
