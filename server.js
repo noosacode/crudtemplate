@@ -35,10 +35,16 @@ app.get("/api/trees/:tag", async function (req, res) {
   }
 
   res.json(tree);
-
 });
 
-app.listen(3000, function () {
-  console.log("Server running on http://localhost:3000");
-  
-});
+// app.listen(3000, function () {
+//  console.log("Server running on http://localhost:3000");
+// });
+
+if (require.main === module) {
+  app.listen(3000, function () {
+    console.log("Server running on http://localhost:3000");
+  });
+}
+
+module.exports = app;
