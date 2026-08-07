@@ -9,6 +9,11 @@ async function findTree() {
 
     const tree = await response.json();
 
+    if (!response.ok) {
+      results.innerHTML = `<p>Tree ${tag} not found.</p>`;
+      return;
+    }
+
 results.innerHTML = `
     <h2>Tree Details</h2>
 
