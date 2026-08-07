@@ -9,29 +9,76 @@ async function findTree() {
 
     const tree = await response.json();
 
-    results.innerHTML = `
-        <h2>Tree Details</h2>
+results.innerHTML = `
+    <h2>Tree Details</h2>
 
-        <p><strong>Tag:</strong> ${tree.tag}</p>
-        <p><strong>Position:</strong> ${tree.position}</p>
-        <p><strong>Colour:</strong> ${tree.colour}</p>
-        <p><strong>WooCommerce:</strong> ${tree.wcStatus}</p>
-        <p><strong>WC Changed:</strong> ${new Date(tree.wcLastChanged).toLocaleDateString()}</p>
-        <p><strong>Sell Score:</strong> ${tree.sellScore}</p>
-        <p><strong>Size:</strong> ${tree.bagSize}</p>
-        <p><strong>Price:</strong> ${tree.price}</p>
-
-        <p><strong>Photo Quality:</strong> ${tree.photoQuality}</p>
-        <p><strong>Best Photo:</strong> ${new Date(tree.bestPhotoDate).toLocaleDateString()}</p>
-        <p><strong>Recent Photo:</strong> ${new Date(tree.recentPhotoDate).toLocaleDateString()}</p>
-        <p><strong>Transport:</strong> ${tree.transportSize}</p>
-        <p><strong>Relative Size:</strong> ${tree.relativeSize}</p>
-        <p><strong>Soil:</strong> ${tree.soilPercent}</p>
-
-        <p><strong>Date Added:</strong> ${new Date(tree.dateAdded).toLocaleDateString()}</p>
-
-        <p><strong>Notes:</strong> ${tree.notes}</p>
-    `;
+    <table style="margin: auto; border-collapse: collapse;">
+        <tr>
+            <td><strong>Tag</strong></td>
+            <td>${tree.tag}</td>
+        </tr>
+        <tr>
+            <td><strong>Position</strong></td>
+            <td>${tree.position}</td>
+        </tr>
+        <tr>
+            <td><strong>Colour</strong></td>
+            <td>${tree.colour}</td>
+        </tr>
+        <tr>
+            <td><strong>WooCommerce</strong></td>
+            <td>${tree.wcStatus}</td>
+        </tr>
+        <tr>
+            <td><strong>WC Changed</strong></td>
+            <td>${new Date(tree.wcLastChanged).toLocaleDateString()}</td>
+        </tr>
+        <tr>
+            <td><strong>Sell Score</strong></td>
+            <td>${tree.sellScore}</td>
+        </tr>
+        <tr>
+            <td><strong>Size</strong></td>
+            <td>${tree.bagSize}</td>
+        </tr>
+        <tr>
+            <td><strong>Price</strong></td>
+            <td>${tree.price}</td>
+        </tr>
+        <tr>
+            <td><strong>Photo Quality</strong></td>
+            <td>${tree.photoQuality}</td>
+        </tr>
+        <tr>
+            <td><strong>Best Photo</strong></td>
+            <td>${new Date(tree.bestPhotoDate).toLocaleDateString()}</td>
+        </tr>
+        <tr>
+            <td><strong>Recent Photo</strong></td>
+            <td>${new Date(tree.recentPhotoDate).toLocaleDateString()}</td>
+        </tr>
+        <tr>
+            <td><strong>Transport</strong></td>
+            <td>${tree.transportSize}</td>
+        </tr>
+        <tr>
+            <td><strong>Relative Size</strong></td>
+            <td>${tree.relativeSize}</td>
+        </tr>
+        <tr>
+            <td><strong>Soil</strong></td>
+            <td>${tree.soilPercent || ""}</td>
+        </tr>
+        <tr>
+            <td><strong>Date Added</strong></td>
+            <td>${new Date(tree.dateAdded).toLocaleDateString()}</td>
+        </tr>
+        <tr>
+            <td><strong>Notes</strong></td>
+            <td>${tree.notes || ""}</td>
+        </tr>
+    </table>
+`;
 }
 
 findButton.addEventListener("click", findTree);
