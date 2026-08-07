@@ -12,7 +12,7 @@ async function findTree() {
 results.innerHTML = `
     <h2>Tree Details</h2>
 
-    <table style="margin: auto; border-collapse: collapse;">
+    <table>
         <tr>
             <td><strong>Tag</strong></td>
             <td>${tree.tag}</td>
