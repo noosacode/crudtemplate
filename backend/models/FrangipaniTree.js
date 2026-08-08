@@ -16,13 +16,13 @@ const frangipaniTreeSchema = new mongoose.Schema(
     colour: {
       type: String,
       required: true,
-      default: "Unknown",
+      default: "Not recorded yet",
     },
 
     wcStatus: {
       type: String,
       required: true,
-      default: "Never Added",
+      default: "Never added to WC",
     },
 
     wcLastChanged: Date,
@@ -36,7 +36,7 @@ const frangipaniTreeSchema = new mongoose.Schema(
     bagSize: {
       type: String,
       required: true,
-      default: "Unknown",
+      default: "Not recorded yet",
     },
 
     price: Number,
@@ -50,13 +50,13 @@ const frangipaniTreeSchema = new mongoose.Schema(
     transportSize: {
       type: String,
       required: true,
-      default: "Uncategorized",
+      default: "Not recorded yet",
     },
 
     relativeSize: {
       type: String,
       required: true,
-      default: "Unranked",
+      default: "Not recorded yet",
     },
 
     soilPercent: Number,
@@ -64,6 +64,7 @@ const frangipaniTreeSchema = new mongoose.Schema(
     dateAdded: {
       type: Date,
       required: true,
+      default: Date.now,
     },
 
     notes: String,
