@@ -10,11 +10,93 @@ async function findTree() {
     const tree = await response.json();
 
     if (!response.ok) {
-      results.innerHTML = `<p>Tree ${tag} not found.</p>`;
-      return;
+        results.innerHTML = `<p>Tree ${tag} not found.</p>`;
+        return;
     }
 
-results.innerHTML = `
+    const formHTML = `
+        <p><strong>Tag:</strong> ${tree.tag}</p>
+
+        <p>
+            <strong>Position:</strong>
+            <input type="text" id="positionInput" value="${tree.position || ""}">
+        </p>
+
+        <p>
+            <strong>Colour:</strong>
+            <input type="text" id="colourInput" value="${tree.colour || ""}">
+        </p>
+
+        <p>
+            <strong>WooCommerce:</strong>
+            <input type="text" id="wcStatusInput" value="${tree.wcStatus || ""}">
+        </p>
+
+        <p>
+            <strong>WC Changed:</strong>
+            <input type="date" id="wcLastChangedInput" value="${tree.wcLastChanged || ""}">
+        </p>
+
+        <p>
+            <strong>Sell Score:</strong>
+            <input type="text" id="sellScoreInput" value="${tree.sellScore || ""}">
+        </p>
+
+        <p>
+            <strong>Size:</strong>
+            <input type="text" id="bagSizeInput" value="${tree.bagSize || ""}">
+        </p>
+
+        <p>
+            <strong>Price:</strong>
+            <input type="text" id="priceInput" value="${tree.price || ""}">
+        </p>
+
+        <p>
+            <strong>Photo Quality:</strong>
+            <input type="text" id="photoQualityInput" value="${tree.photoQuality || ""}">
+        </p>
+
+        <p>
+            <strong>Best Photo:</strong>
+            <input type="date" id="bestPhotoDateInput" value="${tree.bestPhotoDate || ""}">
+        </p>
+
+        <p>
+            <strong>Recent Photo:</strong>
+            <input type="date" id="recentPhotoDateInput" value="${tree.recentPhotoDate || ""}">
+        </p>
+
+        <p>
+            <strong>Transport:</strong>
+            <input type="text" id="transportSizeInput" value="${tree.transportSize || ""}">
+        </p>
+
+        <p>
+            <strong>Relative Size:</strong>
+            <input type="text" id="relativeSizeInput" value="${tree.relativeSize || ""}">
+        </p>
+
+        <p>
+            <strong>Soil:</strong>
+            <input type="text" id="soilPercentInput" value="${tree.soilPercent || ""}">
+        </p>
+
+        <p>
+            <strong>Date Added:</strong>
+            <input type="date" id="dateAddedInput" value="${tree.dateAdded || ""}">
+        </p>
+
+        <p>
+            <strong>Notes:</strong>
+            <input type="text" id="notesInput" value="${tree.notes || ""}">
+        </p>
+
+        <button id="saveButton">Save Changes</button>
+        <button id="cancelButton">Cancel</button>
+    `;
+
+    results.innerHTML = `
     <h2>Tree Details</h2>
 
     <table>
@@ -24,51 +106,51 @@ results.innerHTML = `
         </tr>
         <tr>
             <td><strong>Position</strong></td>
-            <td>${tree.position}</td>
+            <td>${tree.position || ""}</td>
         </tr>
         <tr>
             <td><strong>Colour</strong></td>
-            <td>${tree.colour}</td>
+            <td>${tree.colour || ""}</td>
         </tr>
         <tr>
             <td><strong>WooCommerce</strong></td>
-            <td>${tree.wcStatus}</td>
+            <td>${tree.wcStatus || ""}</td>
         </tr>
         <tr>
             <td><strong>WC Changed</strong></td>
-            <td>${new Date(tree.wcLastChanged).toLocaleDateString()}</td>
+            <td>${tree.wcLastChanged ? new Date(tree.wcLastChanged).toLocaleDateString() : ""}</td>
         </tr>
         <tr>
             <td><strong>Sell Score</strong></td>
-            <td>${tree.sellScore}</td>
+            <td>${tree.sellScore || ""}</td>
         </tr>
         <tr>
             <td><strong>Size</strong></td>
-            <td>${tree.bagSize}</td>
+            <td>${tree.bagSize || ""}</td>
         </tr>
         <tr>
             <td><strong>Price</strong></td>
-            <td>${tree.price}</td>
+            <td>${tree.price || ""}</td>
         </tr>
         <tr>
             <td><strong>Photo Quality</strong></td>
-            <td>${tree.photoQuality}</td>
+            <td>${tree.photoQuality || ""}</td>
         </tr>
         <tr>
             <td><strong>Best Photo</strong></td>
-            <td>${new Date(tree.bestPhotoDate).toLocaleDateString()}</td>
+            <td>${tree.bestPhotoDate ? new Date(tree.bestPhotoDate).toLocaleDateString() : ""}</td>
         </tr>
         <tr>
             <td><strong>Recent Photo</strong></td>
-            <td>${new Date(tree.recentPhotoDate).toLocaleDateString()}</td>
+            <td>${tree.recentPhotoDate ? new Date(tree.recentPhotoDate).toLocaleDateString() : ""}</td>
         </tr>
         <tr>
             <td><strong>Transport</strong></td>
-            <td>${tree.transportSize}</td>
+            <td>${tree.transportSize || ""}</td>
         </tr>
         <tr>
             <td><strong>Relative Size</strong></td>
-            <td>${tree.relativeSize}</td>
+            <td>${tree.relativeSize || ""}</td>
         </tr>
         <tr>
             <td><strong>Soil</strong></td>
@@ -76,7 +158,7 @@ results.innerHTML = `
         </tr>
         <tr>
             <td><strong>Date Added</strong></td>
-            <td>${new Date(tree.dateAdded).toLocaleDateString()}</td>
+            <td>${tree.dateAdded ? new Date(tree.dateAdded).toLocaleDateString() : ""}</td>
         </tr>
         <tr>
             <td><strong>Notes</strong></td>
@@ -86,6 +168,19 @@ results.innerHTML = `
 
     <button id="updateButton">Update</button>
 `;
+
+    // attach click listener to show the editable form
+    const updateButton = document.getElementById("updateButton");
+
+    updateButton.addEventListener("click", function () {
+      results.innerHTML = formHTML;
+
+      const cancelButton = document.getElementById("cancelButton");
+
+      cancelButton.addEventListener("click", function () {
+        findTree();
+      });
+    });
 }
 
 findButton.addEventListener("click", findTree);
