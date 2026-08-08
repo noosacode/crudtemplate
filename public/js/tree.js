@@ -30,15 +30,14 @@ async function findTree() {
 
       const newTree = await response.json();
 
-      results.innerHTML = createFormHTML(newTree, true);
+      results.innerHTML = createFormHTML(newTree);
     });
 
     return;
   }
 
-  function createFormHTML(tree, isNew) {
+  function createFormHTML(tree) {
     return `
-      <input type="hidden" id="isNewTree" value="${isNew}">
         <p><strong>Tag:</strong> ${tree.tag}</p>
 
         <p>
@@ -208,8 +207,6 @@ async function findTree() {
     const saveButton = document.getElementById("saveButton");
 
     saveButton.addEventListener("click", async function () {
-      const isNew = document.getElementById("isNewTree").value === "true";
-      console.log("Save clicked, isNew =", isNew);
       const updatedTree = {
         position: document.getElementById("positionInput").value,
         colour: document.getElementById("colourInput").value,
@@ -228,14 +225,11 @@ async function findTree() {
         notes: document.getElementById("notesInput").value,
       };
 
-      const response = await fetch(
-        isNew ? "/api/trees" : `/api/trees/${tree.tag}`,
-        {
-          method: isNew ? "POST" : "PUT",
-
-          headers: {
-            "Content-Type": "application/json",
-          },
+      const response = await fetch(`/api/trees/${tree.tag}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
           body: JSON.stringify(updatedTree),
         },
       );
