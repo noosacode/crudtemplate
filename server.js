@@ -54,6 +54,14 @@ app.put("/api/trees/:tag", async function (req, res) {
   res.json(tree);
 });
 
+app.post("/api/trees", async function (req, res) {
+  const tree = new FrangipaniTree(req.body);
+
+  await tree.save();
+
+  res.status(201).json(tree);
+});
+
 if (require.main === module) {
   app.listen(3000, function () {
     console.log("Server running on http://localhost:3000");
