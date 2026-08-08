@@ -42,7 +42,7 @@ app.put("/api/trees/:tag", async function (req, res) {
   const tree = await FrangipaniTree.findOneAndUpdate(
     { tag: req.params.tag },
     req.body,
-    { new: true },
+    { returnDocument: "after" },
   );
 
   if (!tree) {

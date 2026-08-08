@@ -57,7 +57,7 @@ async function findTree() {
 
         <p>
             <strong>WC Changed:</strong>
-            <input type="date" id="wcLastChangedInput" value="${tree.wcLastChanged || ""}">
+           <input type="date" id="wcLastChangedInput" value="${tree.wcLastChanged ? new Date(tree.wcLastChanged).toISOString().split("T")[0] : ""}">
         </p>
 
         <p>
@@ -82,12 +82,12 @@ async function findTree() {
 
         <p>
             <strong>Best Photo:</strong>
-            <input type="date" id="bestPhotoDateInput" value="${tree.bestPhotoDate || ""}">
+            <input type="date" id="bestPhotoDateInput" value="${tree.bestPhotoDate ? new Date(tree.bestPhotoDate).toISOString().split("T")[0] : ""}">
         </p>
 
         <p>
             <strong>Recent Photo:</strong>
-            <input type="date" id="recentPhotoDateInput" value="${tree.recentPhotoDate || ""}">
+            <input type="date" id="recentPhotoDateInput" value="${tree.recentPhotoDate ? new Date(tree.recentPhotoDate).toISOString().split("T")[0] : ""}">
         </p>
 
         <p>
@@ -107,7 +107,7 @@ async function findTree() {
 
         <p>
             <strong>Date Added:</strong>
-            <input type="date" id="dateAddedInput" value="${tree.dateAdded || ""}">
+            <input type="date" id="dateAddedInput" value="${tree.dateAdded ? new Date(tree.dateAdded).toISOString().split("T")[0] : ""}">
         </p>
 
         <p>
