@@ -83,6 +83,8 @@ results.innerHTML = `
             <td>${tree.notes || ""}</td>
         </tr>
     </table>
+
+    <button id="updateButton">Update</button>
 `;
 }
 
