@@ -6,6 +6,7 @@ const mongoose = require("mongoose");
 const FrangipaniTree = require("./backend/models/FrangipaniTree");
 
 const app = express();
+app.use(express.json());
 
 mongoose
   .connect(process.env.MONGODB_URI)
@@ -27,6 +28,22 @@ app.get("/api/trees/:tag", async function (req, res) {
   const tree = await FrangipaniTree.findOne({
     tag: req.params.tag,
   });
+
+  if (!tree) {
+    return res.status(404).json({
+      message: "Tree not found.",
+    });
+  }
+
+  res.json(tree);
+});
+
+app.put("/api/trees/:tag", async function (req, res) {
+  const tree = await FrangipaniTree.findOneAndUpdate(
+    { tag: req.params.tag },
+    req.body,
+    { new: true },
+  );
 
   if (!tree) {
     return res.status(404).json({
