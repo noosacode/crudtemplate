@@ -1,7 +1,7 @@
 const LOGIN_URL =
   window.location.hostname === "localhost"
     ? "http://localhost:3000/login"
-    : "/api/login";
+    : "/login";
 
 const loginBtn = document.getElementById("login-btn");
 
