@@ -15,8 +15,10 @@ loginBtn.addEventListener("click", async () => {
     const data = await response.json();
 
     if (response.ok) {
-      localStorage.setItem("token", data.token);
-      alert("Login successful!");
+  localStorage.setItem("token", data.token);
+  document.getElementById("logout-btn").style.display = "block";
+  alert("Login successful!");
+
     } else {
       alert(data.message || "Login failed");
     }
