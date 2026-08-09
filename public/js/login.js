@@ -1,5 +1,7 @@
-const API_BASE_URL =
-  window.location.hostname === "localhost" ? "http://localhost:3000" : "";
+const LOGIN_URL =
+  window.location.hostname === "localhost"
+    ? "http://localhost:3000/login"
+    : "/api/login";
 
 const loginBtn = document.getElementById("login-btn");
 
@@ -8,7 +10,7 @@ loginBtn.addEventListener("click", async () => {
   const password = document.getElementById("password").value;
 
   try {
-    const response = await fetch(`${API_BASE_URL}/api/login`, {
+    const response = await fetch(LOGIN_URL, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ username, password }),
