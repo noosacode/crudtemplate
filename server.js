@@ -1,6 +1,7 @@
 require("dotenv").config();
 
 const express = require("express");
+const cors = require("cors");
 console.log(process.env.MONGODB_URI?.substring(0, 30));
 const mongoose = require("mongoose");
 const FrangipaniTree = require("./backend/models/FrangipaniTree");
@@ -10,6 +11,13 @@ const User = require("./backend/models/User");
 const auth = require("./backend/middleware/auth");
 
 const app = express();
+
+app.use(
+  cors({
+    origin: ["http://localhost:5500", "https://frangipanis-01.vercel.app"],
+  }),
+);
+
 app.use(express.json());
 
 mongoose
