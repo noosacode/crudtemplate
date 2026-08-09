@@ -1,8 +1,3 @@
-const LOGIN_URL =
-  window.location.hostname === "localhost"
-    ? "http://localhost:3000/login"
-    : "/login";
-
 const loginBtn = document.getElementById("login-btn");
 
 loginBtn.addEventListener("click", async () => {
@@ -10,7 +5,8 @@ loginBtn.addEventListener("click", async () => {
   const password = document.getElementById("password").value;
 
   try {
-    const response = await fetch(LOGIN_URL, {
+    const response = await fetch("/login", {
+      //    const response = await fetch(LOGIN_URL, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ username, password }),
