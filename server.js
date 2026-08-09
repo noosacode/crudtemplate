@@ -7,6 +7,7 @@ const FrangipaniTree = require("./backend/models/FrangipaniTree");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 const User = require("./backend/models/User");
+const auth = require("./backend/middleware/auth");
 
 const app = express();
 app.use(express.json());
@@ -76,7 +77,7 @@ app.get("/", function (req, res) {
   res.sendFile(__dirname + "/public/index.html");
 });
 
-app.get("/api/trees/:tag", async function (req, res) {
+app.get("/api/trees/:tag", auth, async function (req, res) {
   const tree = await FrangipaniTree.findOne({
     tag: req.params.tag,
   });
@@ -90,7 +91,7 @@ app.get("/api/trees/:tag", async function (req, res) {
   res.json(tree);
 });
 
-app.put("/api/trees/:tag", async function (req, res) {
+app.put("/api/trees/:tag", auth, async function (req, res) {
   const tree = await FrangipaniTree.findOneAndUpdate(
     { tag: req.params.tag },
     req.body,
@@ -106,7 +107,7 @@ app.put("/api/trees/:tag", async function (req, res) {
   res.json(tree);
 });
 
-app.post("/api/trees", async function (req, res) {
+app.post("/api/trees", auth, async function (req, res) {
   const tree = new FrangipaniTree(req.body);
 
   await tree.save();
