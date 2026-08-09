@@ -5,7 +5,11 @@ const results = document.getElementById("results");
 async function findTree() {
   const tag = tagInput.value;
 
-  const response = await fetch(`/api/trees/${tag}`);
+  const response = await fetch(`/api/trees/${tag}`, {
+    headers: {
+      Authorization: localStorage.getItem("token"),
+    },
+  });
 
   const tree = await response.json();
 
@@ -18,16 +22,17 @@ async function findTree() {
     const addButton = document.getElementById("addButton");
 
     addButton.addEventListener("click", async function () {
-      const response = await fetch("/api/trees", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          tag: tag,
-        }),
-      });
-
+        const response = await fetch("/api/trees", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: localStorage.getItem("token")
+    },
+    body: JSON.stringify({
+      tag: tag,
+    }),
+  });
+  
       const newTree = await response.json();
 
       results.innerHTML = createFormHTML(newTree);
@@ -228,11 +233,11 @@ async function findTree() {
       const response = await fetch(`/api/trees/${tree.tag}`, {
         method: "PUT",
         headers: {
-          "Content-Type": "application/json",
+            "Content-Type": "application/json",
+            Authorization: localStorage.getItem("token")
         },
-          body: JSON.stringify(updatedTree),
-        },
-      );
+        body: JSON.stringify(updatedTree),
+    });
 
       const savedTree = await response.json();
 
