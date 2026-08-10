@@ -43,7 +43,10 @@ async function findTree() {
 
   function createFormHTML(tree) {
     return `
-        <p><strong>Tag:</strong> ${tree.tag}</p>
+        <p>
+            <strong>Tag:</strong>
+            <input type="text" id="tagInput" value="${tree.tag}" readonly>
+        </p>
 
         <p>
             <strong>Position:</strong>
@@ -230,14 +233,16 @@ async function findTree() {
         notes: document.getElementById("notesInput").value,
       };
 
-      const response = await fetch(`/api/trees/${tree.tag}`, {
+      const tag = document.getElementById("tagInput").value;
+
+      const response = await fetch(`/api/trees/${tag}`, {
         method: "PUT",
         headers: {
-            "Content-Type": "application/json",
-            Authorization: localStorage.getItem("token")
+          "Content-Type": "application/json",
+          Authorization: localStorage.getItem("token"),
         },
         body: JSON.stringify(updatedTree),
-    });
+      });
 
       const savedTree = await response.json();
 
