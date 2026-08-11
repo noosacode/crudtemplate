@@ -102,6 +102,18 @@ app.get("/api/trees/positions/:first/:last", auth, async function (req, res) {
   res.json(trees);
 });
 
+app.get("/api/trees/position/:position", auth, async (req, res) => {
+  try {
+    const tree = await FrangipaniTree.findOne({
+      position: Number(req.params.position),
+    });
+
+    res.json(tree);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
 app.put("/api/trees/:tag", auth, async function (req, res) {
   const tree = await FrangipaniTree.findOneAndUpdate(
     { tag: req.params.tag },

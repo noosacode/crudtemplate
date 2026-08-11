@@ -7,9 +7,33 @@ findButton.addEventListener("click", async () => {
   const first = firstPosition.value;
   const last = lastPosition.value;
 
+  if (!first || !last) {
+    alert("Please enter two position numbers.");
+    return;
+  }
+
+  if (
+    !/^\d+$/.test(first) ||
+    !/^\d+$/.test(last) ||
+    Number(first) < 101 ||
+    Number(first) > 99999 ||
+    Number(last) < 101 ||
+    Number(last) > 999999
+  ) {
+    alert("Please enter values between 101 and 99999.");
+    return;
+  }
+
+  let start = Number(first);
+  let end = Number(last);
+
+  if (start > end) {
+    [start, end] = [end, start];
+  }
+
   const token = localStorage.getItem("token");
 
-  const response = await fetch(`/api/trees/positions/${first}/${last}`, {
+  const response = await fetch(`/api/trees/positions/${start}/${end}`, {
     headers: {
       Authorization: token,
     },
@@ -21,6 +45,20 @@ findButton.addEventListener("click", async () => {
 
   console.log("Trees returned:", trees);
 
+  if (trees.length === 0) {
+    results.innerHTML = `
+        <p>No trees found between positions ${start} and ${end}.</p>
+    `;
+    return;
+  }
+
+  if (trees.length > 30) {
+    results.innerHTML = `
+        <p>Your search contains more than 30 trees. Please reduce your search area.</p>
+    `;
+    return;
+  }
+
   results.innerHTML = `
     <table border="1">
         <tr>
@@ -28,7 +66,7 @@ findButton.addEventListener("click", async () => {
             <th>Tag</th>
             <th>Flower colour</th>
             <th>Bag size</th>
-            <th>Moved?</th>
+            <th>Missing</th>
         </tr>
 
         ${trees
@@ -45,7 +83,7 @@ findButton.addEventListener("click", async () => {
           )
           .join("")}
     </table>
-    <button id="saveButton">Save Changes</button>
+    <button id="saveButton">Submit</button>
 `;
 
   const checkboxes = document.querySelectorAll('input[type="checkbox"]');
@@ -53,8 +91,9 @@ findButton.addEventListener("click", async () => {
   checkboxes.forEach((checkbox) => {
     checkbox.addEventListener("change", function () {
       const tag = this.dataset.tag;
-      const position = this.dataset.position;
-      const newPosition = 70000 + Number(position);
+      const position = Number(this.dataset.position);
+
+      const newPosition = position < 50000 ? position + 70000 : position;
 
       console.log("Tree:", tag, "New position:", newPosition);
     });
@@ -72,8 +111,11 @@ findButton.addEventListener("click", async () => {
 
     for (const checkbox of checked) {
       const tag = checkbox.dataset.tag;
+      console.log("Submit raw position:", checkbox.dataset.position);
+
       const position = Number(checkbox.dataset.position);
-      const newPosition = 70000 + position;
+
+      const newPosition = position < 50000 ? position + 70000 : position;
 
       console.log("Saving:", tag, "→", newPosition);
 
@@ -92,5 +134,6 @@ findButton.addEventListener("click", async () => {
 
       console.log("Saved tree:", savedTree);
     }
+    findButton.click();
   });
 });

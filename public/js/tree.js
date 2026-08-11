@@ -157,6 +157,28 @@ async function findTree() {
         dateAdded: document.getElementById("dateAddedInput").value,
         notes: document.getElementById("notesInput").value,
       };
+      const currentTag = tree.tag;
+
+      const positionCheckResponse = await fetch(
+        `/api/trees/position/${updatedTree.position}`,
+        {
+          headers: {
+            Authorization: localStorage.getItem("token"),
+          },
+        },
+      );
+
+      const existingTree = await positionCheckResponse.json();
+
+      if (existingTree && existingTree.tag !== currentTag) {
+        const proceed = confirm(
+          `Are you sure ${existingTree.tag} is not at position ${updatedTree.position}?`,
+        );
+
+        if (!proceed) {
+          return;
+        }
+      }
 
       const tag = document.getElementById("tagInput").value;
 
