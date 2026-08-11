@@ -11,7 +11,7 @@ async function findTree() {
     },
   });
 
-  const tree = await response.json();
+  let tree = await response.json();
 
   if (!response.ok) {
     results.innerHTML = `
@@ -22,20 +22,22 @@ async function findTree() {
     const addButton = document.getElementById("addButton");
 
     addButton.addEventListener("click", async function () {
-        const response = await fetch("/api/trees", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: localStorage.getItem("token")
-    },
-    body: JSON.stringify({
-      tag: tag,
-    }),
-  });
-  
-      const newTree = await response.json();
+      const response = await fetch("/api/trees", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: localStorage.getItem("token"),
+        },
+        body: JSON.stringify({
+          tag: tag,
+        }),
+      });
 
-      results.innerHTML = createFormHTML(newTree);
+      tree = await response.json();
+
+      results.innerHTML = createFormHTML(tree);
+
+      attachFormListeners(tree);
     });
 
     return;
@@ -128,6 +130,51 @@ async function findTree() {
     `;
   }
 
+  function attachFormListeners(tree) {
+    const cancelButton = document.getElementById("cancelButton");
+
+    cancelButton.addEventListener("click", function () {
+      findTree();
+    });
+
+    const saveButton = document.getElementById("saveButton");
+
+    saveButton.addEventListener("click", async function () {
+      const updatedTree = {
+        position: document.getElementById("positionInput").value,
+        colour: document.getElementById("colourInput").value,
+        wcStatus: document.getElementById("wcStatusInput").value,
+        wcLastChanged: document.getElementById("wcLastChangedInput").value,
+        sellScore: document.getElementById("sellScoreInput").value,
+        bagSize: document.getElementById("bagSizeInput").value,
+        price: document.getElementById("priceInput").value,
+        photoQuality: document.getElementById("photoQualityInput").value,
+        bestPhotoDate: document.getElementById("bestPhotoDateInput").value,
+        recentPhotoDate: document.getElementById("recentPhotoDateInput").value,
+        transportSize: document.getElementById("transportSizeInput").value,
+        relativeSize: document.getElementById("relativeSizeInput").value,
+        soilPercent: document.getElementById("soilPercentInput").value,
+        dateAdded: document.getElementById("dateAddedInput").value,
+        notes: document.getElementById("notesInput").value,
+      };
+
+      const tag = document.getElementById("tagInput").value;
+
+      const response = await fetch(`/api/trees/${tag}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: localStorage.getItem("token"),
+        },
+        body: JSON.stringify(updatedTree),
+      });
+
+      const savedTree = await response.json();
+
+      findTree();
+    });
+  }
+
   results.innerHTML = `
     <h2>Tree Details</h2>
 
@@ -207,47 +254,7 @@ async function findTree() {
   updateButton.addEventListener("click", function () {
     results.innerHTML = createFormHTML(tree);
 
-    const cancelButton = document.getElementById("cancelButton");
-
-    cancelButton.addEventListener("click", function () {
-      findTree();
-    });
-    const saveButton = document.getElementById("saveButton");
-
-    saveButton.addEventListener("click", async function () {
-      const updatedTree = {
-        position: document.getElementById("positionInput").value,
-        colour: document.getElementById("colourInput").value,
-        wcStatus: document.getElementById("wcStatusInput").value,
-        wcLastChanged: document.getElementById("wcLastChangedInput").value,
-        sellScore: document.getElementById("sellScoreInput").value,
-        bagSize: document.getElementById("bagSizeInput").value,
-        price: document.getElementById("priceInput").value,
-        photoQuality: document.getElementById("photoQualityInput").value,
-        bestPhotoDate: document.getElementById("bestPhotoDateInput").value,
-        recentPhotoDate: document.getElementById("recentPhotoDateInput").value,
-        transportSize: document.getElementById("transportSizeInput").value,
-        relativeSize: document.getElementById("relativeSizeInput").value,
-        soilPercent: document.getElementById("soilPercentInput").value,
-        dateAdded: document.getElementById("dateAddedInput").value,
-        notes: document.getElementById("notesInput").value,
-      };
-
-      const tag = document.getElementById("tagInput").value;
-
-      const response = await fetch(`/api/trees/${tag}`, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: localStorage.getItem("token"),
-        },
-        body: JSON.stringify(updatedTree),
-      });
-
-      const savedTree = await response.json();
-
-      findTree();
-    });
+    attachFormListeners(tree);
   });
 }
 
