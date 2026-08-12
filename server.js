@@ -12,6 +12,10 @@ const auth = require("./backend/middleware/auth");
 const app = express();
 app.use(express.json());
 
+    // test db connection
+const itemsRouter = require("./backend/routes/items");
+app.use("/items", itemsRouter);
+
 mongoose
   .connect(process.env.MONGODB_URI)
   .then(() => {
