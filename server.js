@@ -8,6 +8,7 @@ const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 const User = require("./backend/models/User");
 const auth = require("./backend/middleware/auth");
+const router = express.Router();
 
 const app = express();
 app.use(express.json());
