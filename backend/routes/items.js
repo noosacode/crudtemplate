@@ -22,4 +22,13 @@ router.get("/where", (req, res) => {
   });
 });
 
+router.get("/users/all", async (req, res) => {
+  const docs = await mongoose.connection.db
+    .collection("users")
+    .find({})
+    .toArray();
+
+  res.json(docs);
+});
+
 module.exports = router;
