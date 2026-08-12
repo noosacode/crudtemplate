@@ -2,15 +2,19 @@ require("dotenv").config();
 
 const express = require("express");
 const mongoose = require("mongoose");
-const CrudDocument = require("./backend/models/CrudDocument");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
+
 const User = require("./backend/models/User");
+const CrudDocument = require("./backend/models/CrudDocument");
 const auth = require("./backend/middleware/auth");
 
 const app = express();
-app.use(express.json());
 
+app.use(express.json());
+app.use(express.static("public"));
+
+// Connect to MongoDB
 mongoose
   .connect(process.env.MONGODB_URI)
   .then(() => {
@@ -21,49 +25,47 @@ mongoose
     console.log(error.message);
   });
 
-app.use(express.static("public"));
-
+// Register
 app.post("/register", async (req, res) => {
   try {
     const { username, password } = req.body;
 
-    // hash the password
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    // create user
     const user = new User({
       username,
       password: hashedPassword,
     });
 
     await user.save();
+
     res.send("User registered");
   } catch (err) {
     res.status(500).send(err.message);
   }
 });
 
+// Login
 app.post("/login", async (req, res) => {
   try {
     const { username, password } = req.body;
 
-    // find the user
     const user = await User.findOne({ username });
+
     if (!user) {
       return res.status(401).send("Invalid username or password");
     }
 
-    // compare password
     const isMatch = await bcrypt.compare(password, user.password);
+
     if (!isMatch) {
       return res.status(401).send("Invalid username or password");
     }
 
-    // create JWT token
     const token = jwt.sign(
       { id: user._id, username: user.username },
       process.env.JWT_SECRET,
-      { expiresIn: "5h" },
+      { expiresIn: "5h" }
     );
 
     res.json({ token });
@@ -72,71 +74,100 @@ app.post("/login", async (req, res) => {
   }
 });
 
+// Home page
 app.get("/", function (req, res) {
   res.sendFile(__dirname + "/public/index.html");
 });
 
-app.get("/api/trees/:tag", auth, async function (req, res) {
-  const tree = await FrangipaniTree.findOne({
-    tag: req.params.tag,
-  });
+// -------------------------
+// CRUD DOCUMENT ROUTES
+// -------------------------
 
-  if (!tree) {
-    return res.status(404).json({
-      message: "Tree not found.",
-    });
-  }
-
-  res.json(tree);
-});
-
-app.get("/api/trees/positions/:first/:last", auth, async function (req, res) {
-  const trees = await FrangipaniTree.find({
-    position: {
-      $gte: Number(req.params.first),
-      $lte: Number(req.params.last),
-    },
-  }).sort({ position: 1 });
-
-  res.json(trees);
-});
-
-app.get("/api/trees/position/:position", auth, async (req, res) => {
+// Get all documents
+app.get("/api/documents", auth, async (req, res) => {
   try {
-    const tree = await FrangipaniTree.findOne({
-      position: Number(req.params.position),
-    });
+    const documents = await CrudDocument.find().sort({ createdAt: -1 });
 
-    res.json(tree);
+    res.json(documents);
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
 });
 
-app.put("/api/trees/:tag", auth, async function (req, res) {
-  const tree = await FrangipaniTree.findOneAndUpdate(
-    { tag: req.params.tag },
-    req.body,
-    { returnDocument: "after" },
-  );
+// Get one document
+app.get("/api/documents/:id", auth, async (req, res) => {
+  try {
+    const document = await CrudDocument.findById(req.params.id);
 
-  if (!tree) {
-    return res.status(404).json({
-      message: "Tree not found.",
-    });
+    if (!document) {
+      return res.status(404).json({
+        message: "Document not found.",
+      });
+    }
+
+    res.json(document);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
   }
-
-  res.json(tree);
 });
 
-app.post("/api/trees", auth, async function (req, res) {
-  const tree = new FrangipaniTree(req.body);
+// Create document
+app.post("/api/documents", auth, async (req, res) => {
+  try {
+    const document = new CrudDocument(req.body);
 
-  await tree.save();
+    await document.save();
 
-  res.status(201).json(tree);
+    res.status(201).json(document);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
 });
 
+// Update document
+app.put("/api/documents/:id", auth, async (req, res) => {
+  try {
+    const document = await CrudDocument.findByIdAndUpdate(
+      req.params.id,
+      req.body,
+      {
+        returnDocument: "after",
+        runValidators: true,
+      }
+    );
+
+    if (!document) {
+      return res.status(404).json({
+        message: "Document not found.",
+      });
+    }
+
+    res.json(document);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// Delete document
+app.delete("/api/documents/:id", auth, async (req, res) => {
+  try {
+    const document = await CrudDocument.findByIdAndDelete(req.params.id);
+
+    if (!document) {
+      return res.status(404).json({
+        message: "Document not found.",
+      });
+    }
+
+    res.json({
+      message: "Document deleted.",
+    });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// Start server locally
 if (require.main === module) {
   app.listen(3000, function () {
     console.log("Server running on http://localhost:3000");
