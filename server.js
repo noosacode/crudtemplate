@@ -2,7 +2,7 @@ require("dotenv").config();
 
 const express = require("express");
 const mongoose = require("mongoose");
-const FrangipaniTree = require("./backend/models/FrangipaniTree");
+const CrudDocument = require("./backend/models/CrudDocument");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 const User = require("./backend/models/User");
