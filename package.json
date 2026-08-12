@@ -1,5 +1,5 @@
 {
-  "name": " frangipanis-01",
+  "name": " crudtemplate",
   "version": "1.0.0",
   "description": "",
   "main": "server.js",
@@ -15,7 +15,6 @@
     "dotenv": "^17.4.2",
     "express": "^5.2.1",
     "jsonwebtoken": "^9.0.3",
-    "mongodb": "^7.5.0",
-    "mongoose": "^9.9.1"
+    "mongoose": "^9.9.2"
   }
 }
