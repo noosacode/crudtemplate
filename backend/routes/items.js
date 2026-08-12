@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-// mthod 1
+// method 1
 const mongoose = require("mongoose");
 
 // method 2
