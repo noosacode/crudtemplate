@@ -65,7 +65,7 @@ app.post("/login", async (req, res) => {
     const token = jwt.sign(
       { id: user._id, username: user.username },
       process.env.JWT_SECRET,
-      { expiresIn: "5h" }
+      { expiresIn: "5h" },
     );
 
     res.json({ token });
@@ -133,7 +133,7 @@ app.put("/api/documents/:id", auth, async (req, res) => {
       {
         returnDocument: "after",
         runValidators: true,
-      }
+      },
     );
 
     if (!document) {
